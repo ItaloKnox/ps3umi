@@ -317,6 +317,23 @@ int process_bup(FILE *in,char *output){
 	dpcm(data,data,header.w,header.h,SCANLINE(header.w));
 	write_bmp(str,data,header.w,header.h,SCANLINE(header.w));
 
+	//The very first ouput image (the first chunk) was output without the filename.
+	//This code ensures the first image has the correct filename.
+	wchar_t wname[0x100] = { 0, };
+	wchar_t wrealname[0x100] = { 0, };
+
+	//convert already written image filename to wide char
+	MultiByteToWideChar(932, 0, str, sizeof(str), wname, 0x100);
+
+	sprintf(str, "%s%s.bmp", output, chunks[0].title);
+
+	//create the final image filename
+	MultiByteToWideChar(932, 0, str, sizeof(str), wrealname, 0x100);
+
+	//rename file (overwrite if already exists by deleting first)
+	DeleteFileW(wrealname);
+	MoveFileW(wname, wrealname);
+
 	free(buffer);
 
 	for(i=0;i<header.chunks;i++){
