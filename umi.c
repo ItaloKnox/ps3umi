@@ -24,7 +24,7 @@ int usage(int argc,char **argv){
 		"    Creates multiple windows bitmap files named file_<sub-title>.bmp\n"
 		"    from ps3 umineko picture collection file.txa\n"
 		"",
-		argv[0],argv[0],argv[0]
+		argv[0],argv[0],argv[0],argv[0]
 	);
 	exit(1);
 }
