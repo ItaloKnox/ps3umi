@@ -24,7 +24,7 @@ int usage(int argc,char **argv){
 		"    Creates multiple windows bitmap files named file_<sub-title>.bmp\n"
 		"    from ps3 umineko picture collection file.txa\n"
 		"",
-		argv[0],argv[0],argv[0]
+		argv[0],argv[0],argv[0],argv[0]
 	);
 	exit(1);
 }
@@ -300,6 +300,7 @@ int process_bup(FILE *in,char *output){
 	unsigned char *buffer;
 	int i;
 	char str[0x100];
+	char meta_info_filename[0x100];
 
 	fread(&header,sizeof(header),1,in);
 
@@ -311,6 +312,16 @@ int process_bup(FILE *in,char *output){
 	buffer=malloc(header.size);
 	fseek(in,header.off,0);
 	fread(buffer,header.size,1,in);
+
+	sprintf(meta_info_filename, "%s.txt", output);
+	FILE * f_meta_info = fopen(meta_info_filename, "w");
+	if (f_meta_info == NULL)
+	{
+		printf("Error opening meta info output file!\n");
+		exit(1);
+	}
+	fprintf(f_meta_info, "%d, %d\n", header.left, header.top);
+	fclose(f_meta_info);
 
 	sprintf(str,"%s.bmp",output);
 	decode(buffer,header.size,data);
